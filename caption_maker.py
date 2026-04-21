@@ -6,6 +6,20 @@ from datetime import datetime
 # -----------------------
 # Fungsi Utility
 # -----------------------
+
+def clean_path(p):
+    if not p:
+        return p
+
+    p = p.strip()
+
+    if (p.startswith('"') and p.endswith('"')) or (p.startswith("'") and p.endswith("'")):
+        p = p[1:-1]
+
+    p = p.strip('"').strip("'")
+    return p
+
+
 def format_time(t):
     h = int(t // 3600)
     m = int((t % 3600) // 60)
@@ -66,7 +80,9 @@ video_extensions = [".mp4", ".mkv", ".mov", ".avi",
 files_to_process = []
 
 if mode_choice == "1":
-    file_path = input("Masukkan path file video: ").strip()
+    # file_path = input("Masukkan path file video: ").strip()
+    raw_path = input("Masukkan path file video: ")
+    file_path = os.path.normpath(clean_path(raw_path))
     if os.path.isfile(file_path) and any(file_path.lower().endswith(ext) for ext in video_extensions):
         files_to_process.append(file_path)
     else:
@@ -74,7 +90,9 @@ if mode_choice == "1":
         exit(1)
 
 elif mode_choice == "2":
-    folder_path = input("Masukkan path folder video: ").strip()
+    # folder_path = input("Masukkan path folder video: ").strip()
+    raw_folder = input("Masukkan path folder video: ")
+    folder_path = os.path.normpath(clean_path(raw_folder))
     if not os.path.isdir(folder_path):
         print("Folder tidak valid.")
         exit(1)
